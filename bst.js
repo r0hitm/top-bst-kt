@@ -237,19 +237,19 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
 };
 
 
-// Manual testing
-let arr = [1, 2, 5, 10, 15, 1, 2, 5, 10, 15];
-arr.sort((a, b) => a - b);
-arr = [...new Set(arr)]; // Remove duplicates using Sets and spread operator
-// console.log(arr);
-let tree = new Tree(arr);
-// console.log(tree.root);
-prettyPrint(tree.root);
-tree.insert(20);
-prettyPrint(tree.root);
-tree.delete(15);
-prettyPrint(tree.root);
-levelOrder(tree.root, node => console.log(node.value));
-console.log(isBalanced(tree.root));
-// console.log(rebalance(tree.root));
+// // Manual testing
+// let arr = [1, 2, 5, 10, 15, 1, 2, 5, 10, 15];
+// arr.sort((a, b) => a - b);
+// arr = [...new Set(arr)]; // Remove duplicates using Sets and spread operator
+// // console.log(arr);
+// let tree = new Tree(arr);
+// // console.log(tree.root);
 // prettyPrint(tree.root);
+// tree.insert(20);
+// prettyPrint(tree.root);
+// tree.delete(15);
+// prettyPrint(tree.root);
+// levelOrder(tree.root, node => console.log(node.value));
+// console.log(isBalanced(tree.root));
+// // console.log(rebalance(tree.root));
+// // prettyPrint(tree.root);
