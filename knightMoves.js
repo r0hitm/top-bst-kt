@@ -6,6 +6,8 @@
  * Author: Rohit Mehta (github.com/r0hitm)
  */
 
+const assert = require("assert");
+
 //-----------------------------------------------------------------------------------------------
 // Notes from Discord discussions:
 // We know the starting position. We can calculate the positions the knight can move to from the
@@ -23,8 +25,6 @@
 // Pos is an array of two numbers [x, y]
 // where x and y are the coordinates of the chessboard
 // Note: 0 <= x, y <= 7
-const makePos = (x, y) => [x, y];
-// console.log(makePos(2, 2));
 
 // Pos Pos -> Array[Pos]
 // Return an array of Pos that a knight can make from start to end in least moves
@@ -34,26 +34,29 @@ const knightMoves = (start, end) => {
 
 // Pos Pos Array[Pos] -> Array[Pos]
 // Return an array of Pos that a knight can make from start to end in least moves
-const knightMovesHelper = (start, end, visited) => {
+const knightMovesHelper = (start, end, visited = []) => {
+    // console.log(visited);
+    // console.log(start);
     if (start[0] === end[0] && start[1] === end[1]) {
         return visited;
     } else {
-        const nextPos = moveKnight(start, visited);
+        const nextPossibleMoves = moveKnight(start, visited).filter(
+            p => p.length > 0
+        ); // that are not in visited
+        console.log(nextPossibleMoves);
 
-        if (nextPos.length === 0) {
-            return [];
-        } else if (reachedEnd(nextPos, end)) {
-            return visited.concat([end]);
-        } else {
-            for (let i = 0; i < nextPos.length; i++) {
-                const pos = nextPos[i];
-                const result = knightMovesHelper(pos, end, visited.concat([pos]));
-                if (result.length !== 0) {
-                    return result;
-                }
-            }
-            return [];
-        }
+        assert(nextPossibleMoves !== undefined);
+
+        const paths = nextPossibleMoves.map(p => {
+            // console.log(p);
+            const res = knightMovesHelper(p, end, visited.concat([p]));
+            assert(res !== undefined);
+            return res;
+        });
+        assert(paths !== undefined);
+        // console.log(paths);
+
+        // return shortestPath;
     }
 };
 
@@ -72,16 +75,17 @@ const reachedEnd = (nextPos, end) => {
 // Pos (listoƒ Pos) -> Array[Pos]
 // Return an array of all possible positions a knight can move to from pos
 const moveKnight = (pos, visited = []) => {
+    // console.log(visited);
     const [x, y] = pos;
     const moves = [
-        makePos(x + 1, y + 2),
-        makePos(x + 1, y - 2),
-        makePos(x - 1, y + 2),
-        makePos(x - 1, y - 2),
-        makePos(x + 2, y + 1),
-        makePos(x + 2, y - 1),
-        makePos(x - 2, y + 1),
-        makePos(x - 2, y - 1),
+        [x + 1, y + 2],
+        [x + 1, y - 2],
+        [x - 1, y + 2],
+        [x - 1, y - 2],
+        [x + 2, y + 1],
+        [x + 2, y - 1],
+        [x - 2, y + 1],
+        [x - 2, y - 1],
     ].filter(p => {
         const [x, y] = p;
         return (
@@ -114,13 +118,11 @@ const moveKnight = (pos, visited = []) => {
 // }
 
 // console.log(knightMoves([0, 0], [0, 0]));
-const test1 = knightMoves([0, 0], [1, 2]);
-const test2 = knightMoves([0, 0], [3, 3]);
+// const test1 = knightMoves([0, 0], [1, 2]);
+// const test2 = knightMoves([0, 0], [3, 3]);
 const test3 = knightMoves([3, 3], [0, 0]);
-console.log(test1);
-console.log(test2);
+// const test4 = knightMoves([3, 3], [4, 3]);
+// console.log(test1);
+// console.log(test2);
 console.log(test3);
-// }
-// if (knightMoves([3, 3], [4, 3]) !== [[3, 3], [1, 2], [0, 0], [2, 1], [4, 2], [5, 4], [4, 3]]) {
-//     console.log("Test 4 Failed");
-// }
+// console.log(test4);
