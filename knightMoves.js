@@ -40,34 +40,33 @@ const knightMovesHelper = (start, end, visited) => {
     } else {
         const nextPos = moveKnight(start, visited);
 
-        // Check if any of the nextPos is the end
-        for (let i = 0; i < nextPos.length; i++) {
-            const p = nextPos[i];
-            if (p[0] === end[0] && p[1] === end[1]) {
-                return visited.concat([p]);
+        if (nextPos.length === 0) {
+            return [];
+        } else if (reachedEnd(nextPos, end)) {
+            return visited.concat([end]);
+        } else {
+            for (let i = 0; i < nextPos.length; i++) {
+                const pos = nextPos[i];
+                const result = knightMovesHelper(pos, end, visited.concat([pos]));
+                if (result.length !== 0) {
+                    return result;
+                }
             }
+            return [];
         }
-        // console.log({nextPos});
-
-        // If none of the nextPos is the end, then we need to check the nextPos of the nextPos
-        const allPaths = nextPos.map(pos =>
-            knightMovesHelper(pos, end, visited.concat([pos]))
-        );
-        console.log({allPaths});
-        // let shortestPath = allPaths[0].length;
-        // for (let i = 1; i < allPaths.length; i++) {
-        //     const path = allPaths[i];
-        //     if (path.length < shortestPath) {
-        //         shortestPath = path.length;
-        //     }
-        // }
-        // return allPaths.filter(p => p.length === shortestPath)[0];
-
-        // for (let i = 0; i < nextPos.length; i++) {
-        //     const pos = nextPos[i];
-        //     return knightMovesHelper(pos, end, visited.concat([pos]));
-        // }
     }
+};
+
+// Array[Pos] Pos -> Boolean
+// Return true if any of the pos in the array is the end
+const reachedEnd = (nextPos, end) => {
+    for (let i = 0; i < nextPos.length; i++) {
+        const pos = nextPos[i];
+        if (pos[0] === end[0] && pos[1] === end[1]) {
+            return true;
+        }
+    }
+    return false;
 };
 
 // Pos (listoƒ Pos) -> Array[Pos]
@@ -115,11 +114,11 @@ const moveKnight = (pos, visited = []) => {
 // }
 
 // console.log(knightMoves([0, 0], [0, 0]));
-// const test1 = knightMoves([0, 0], [1, 2]);
-// const test2 = knightMoves([0, 0], [3, 3]);
+const test1 = knightMoves([0, 0], [1, 2]);
+const test2 = knightMoves([0, 0], [3, 3]);
 const test3 = knightMoves([3, 3], [0, 0]);
-// console.log(test1);
-// console.log(test2);
+console.log(test1);
+console.log(test2);
 console.log(test3);
 // }
 // if (knightMoves([3, 3], [4, 3]) !== [[3, 3], [1, 2], [0, 0], [2, 1], [4, 2], [5, 4], [4, 3]]) {
