@@ -47,12 +47,26 @@ const knightMovesHelper = (start, end, visited) => {
                 return visited.concat([p]);
             }
         }
+        // console.log({nextPos});
 
         // If none of the nextPos is the end, then we need to check the nextPos of the nextPos
-        for (let i = 0; i < nextPos.length; i++) {
-            const pos = nextPos[i];
-            return knightMovesHelper(pos, end, visited.concat([pos]));
-        }
+        const allPaths = nextPos.map(pos =>
+            knightMovesHelper(pos, end, visited.concat([pos]))
+        );
+        console.log({allPaths});
+        // let shortestPath = allPaths[0].length;
+        // for (let i = 1; i < allPaths.length; i++) {
+        //     const path = allPaths[i];
+        //     if (path.length < shortestPath) {
+        //         shortestPath = path.length;
+        //     }
+        // }
+        // return allPaths.filter(p => p.length === shortestPath)[0];
+
+        // for (let i = 0; i < nextPos.length; i++) {
+        //     const pos = nextPos[i];
+        //     return knightMovesHelper(pos, end, visited.concat([pos]));
+        // }
     }
 };
 
@@ -69,8 +83,7 @@ const moveKnight = (pos, visited = []) => {
         makePos(x + 2, y - 1),
         makePos(x - 2, y + 1),
         makePos(x - 2, y - 1),
-    ];
-    return moves.filter(p => {
+    ].filter(p => {
         const [x, y] = p;
         return (
             x >= 0 &&
@@ -90,6 +103,8 @@ const moveKnight = (pos, visited = []) => {
             })()
         );
     });
+
+    return moves;
 };
 
 // Manual Tests
