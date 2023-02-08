@@ -32,16 +32,21 @@ const searchPath = (start, end, visited = [], tovisit = [], maxDepth) => {
                 return equals(pos, visitedPos) === false;
             });
         });
-        tovisit = tovisit.concat(moves);
+        // look if any of the moves is the end
+        const endMove = moves.find(move => equals(move, end));
+        if (endMove !== undefined) {
+            return visited;
+        }
+        tovisit.unshift(...moves);
         visited.push(start);
         return searchPath(tovisit.shift(), end, tovisit, visited, maxDepth - 1);
     }
 }
 
-const searchPathIDS = (start, end, visited = [], tovisit = []) => {
+const searchPathIDS = (start, end) => {
     let maxDepth = 1;
     while (true) {
-        const path = searchPath(start, end, visited, tovisit, maxDepth);
+        const path = searchPath(start, end, [], [], maxDepth);
         if (path !== undefined) {
             return [start, ...path, end];
         }
@@ -69,7 +74,9 @@ const getNextPos = pos => {
 
 
 // TEST:
-// console.log(searchPathIDS([0,0], [0,0]));
-// console.log(searchPathIDS([0,0], [1,2]));
-// console.log(searchPathIDS([0,0], [3,3]));
+console.log(searchPathIDS([0,0], [0,0]));
+console.log(searchPathIDS([0,0], [1,2]));
+console.log(searchPathIDS([0,0], [3,3]));
 console.log(searchPathIDS([3,3], [0,0]));
+console.log(searchPathIDS([2,1], [0,0]));
+console.log(searchPathIDS([1,2], [0,0]));
