@@ -26,7 +26,6 @@ const buildPath = (start, end, visited = []) => {
     } else {
         const moves = getNextPos(start);
         console.log(moves);
-        return;
         const shortestPath = moves.map(move => {
             return buildPath(move, end, visited.concat([move]));
         });
