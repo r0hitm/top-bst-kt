@@ -24,8 +24,10 @@ const knightMoves = (start, end) => {
 
 // Return the path from start to end as an array of positions using DFS
 const searchPath = (start, end, visited = [], tovisit = [], maxDepth) => {
-    if (equals(start, end) || maxDepth === 0) {
+    if (equals(start, end)) {
         return visited;
+    } else if (maxDepth === 0) {
+        return undefined;
     } else {
         const moves = getNextPos(start).filter(pos => {
             return visited.every(visitedPos => {
