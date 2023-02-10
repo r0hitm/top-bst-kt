@@ -17,20 +17,26 @@ const equals = (pos1, pos2) => {
     return pos1[0] === pos2[0] && pos1[1] === pos2[1];
 };
 
+// Returns the shortest path from start to end of the knight
+// using Iterative Deepening Search
 const knightMoves = (start, end) => {
-    return searchPathIDS(start, end);
+    let maxDepth = 1;
+    while (true) {
+        const path = searchPath(start, end, maxDepth);
+        if (path !== undefined) {
+            return [...path, end];
+        }
+        maxDepth++;
+    }
 };
 
 // Return the path from start to end as an array of positions using DFS
-const searchPath = (start, end, visited = [], maxDepth) => {
+const searchPath = (start, end, maxDepth, visited = []) => {
     if (equals(start, end)) {
         return visited;
     } else if (maxDepth === 0) {
         return undefined;
-    // } else if (tovisit.length === 0) {
-    //     return undefined;
     } else {
-        // let depth = maxDepth;
         const moves = getNextPos(start).filter(pos => {
             return visited.every(visitedPos => {
                 return equals(pos, visitedPos) === false;
@@ -44,8 +50,7 @@ const searchPath = (start, end, visited = [], maxDepth) => {
             if (index !== -1) {
                 visited.splice(index + 1);
             }
-            const path = searchPath(pos, end, visited, maxDepth - 1);
-            // console.log("45: ", path);
+            const path = searchPath(pos, end, maxDepth - 1, visited);
             if (path !== undefined) {
                 return path;
             }
@@ -59,28 +64,6 @@ const searchPath = (start, end, visited = [], maxDepth) => {
                 return val;
             } else return acc.length > val.length ? val : acc;
         });
-    }
-};
-
-const searchPathHelper = (start, end, visited, tovisit, maxDepth) => {
-    // tovisit.unshift(-1, ...moves); // -1 is a separator
-    // visited.push(start);
-    // if (tovisit[0] === -1) {
-    //     tovisit.shift();
-    //     depth--;
-    // }
-    // return searchPath(tovisit.shift(), end, tovisit, visited, depth);
-};
-
-const searchPathIDS = (start, end) => {
-    let maxDepth = 1;
-    while (true) {
-        const path = searchPath(start, end, [], maxDepth);
-        // console.log("75: ", path);
-        if (path !== undefined) {
-            return [...path, end];
-        }
-        maxDepth++;
     }
 };
 
@@ -102,9 +85,9 @@ const getNextPos = pos => {
 };
 
 // TEST:
-console.log(searchPathIDS([0, 0], [0, 0]));
-console.log(searchPathIDS([0, 0], [1, 2]));
-console.log(searchPathIDS([0, 0], [3, 3]));
-console.log(searchPathIDS([3, 3], [0, 0]));
-console.log(searchPathIDS([2, 1], [0, 0]));
-console.log(searchPathIDS([1, 2], [0, 0]));
+console.log(knightMoves([0, 0], [0, 0]));
+console.log(knightMoves([0, 0], [1, 2]));
+console.log(knightMoves([0, 0], [3, 3]));
+console.log(knightMoves([3, 3], [0, 0]));
+console.log(knightMoves([2, 1], [0, 0]));
+console.log(knightMoves([1, 2], [0, 0]));
