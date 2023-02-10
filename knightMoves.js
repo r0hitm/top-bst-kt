@@ -7,7 +7,6 @@
  */
 
 const assert = require("assert");
-const { isArray } = require("util");
 
 // Pos is an array of two numbers [x, y]
 // where x and y are the coordinates of the chessboard
@@ -40,7 +39,13 @@ const searchPath = (start, end, visited = [], maxDepth) => {
 
         visited.push(start);
         const res = moves.map(pos => {
+            // remove the positions that have been traversed in the move
+            const index = visited.findIndex(v => equals(v, start));
+            if (index !== -1) {
+                visited.splice(index + 1);
+            }
             const path = searchPath(pos, end, visited, maxDepth - 1);
+            // console.log("45: ", path);
             if (path !== undefined) {
                 return path;
             }
@@ -71,8 +76,9 @@ const searchPathIDS = (start, end) => {
     let maxDepth = 1;
     while (true) {
         const path = searchPath(start, end, [], maxDepth);
+        // console.log("75: ", path);
         if (path !== undefined) {
-            return [start, ...path, end];
+            return [...path, end];
         }
         maxDepth++;
     }
@@ -96,9 +102,9 @@ const getNextPos = pos => {
 };
 
 // TEST:
-// console.log(searchPathIDS([0, 0], [0, 0]));
-// console.log(searchPathIDS([0, 0], [1, 2]));
-// console.log(searchPathIDS([0, 0], [3, 3]));
+console.log(searchPathIDS([0, 0], [0, 0]));
+console.log(searchPathIDS([0, 0], [1, 2]));
+console.log(searchPathIDS([0, 0], [3, 3]));
 console.log(searchPathIDS([3, 3], [0, 0]));
-// console.log(searchPathIDS([2, 1], [0, 0]));
-// console.log(searchPathIDS([1, 2], [0, 0]));
+console.log(searchPathIDS([2, 1], [0, 0]));
+console.log(searchPathIDS([1, 2], [0, 0]));
