@@ -17,7 +17,6 @@ const equals = (pos1, pos2) => {
     return pos1[0] === pos2[0] && pos1[1] === pos2[1];
 };
 
-
 const knightMoves = (start, end) => {
     return searchPathIDS(start, end);
 };
@@ -39,11 +38,22 @@ const searchPath = (start, end, visited = [], tovisit = [], maxDepth) => {
         if (endMove !== undefined) {
             return visited;
         }
-        tovisit.unshift(...moves);
+        tovisit.unshift(-1, ...moves); // -1 is a separator
         visited.push(start);
-        return searchPath(tovisit.shift(), end, tovisit, visited, maxDepth - 1);
+        if (tovisit[0] === -1) {
+            tovisit.shift();
+            return searchPath(
+                tovisit.shift(),
+                end,
+                visited,
+                tovisit,
+                maxDepth - 1
+            );
+        } else {
+            return searchPath(tovisit.shift(), end, tovisit, visited, maxDepth);
+        }
     }
-}
+};
 
 const searchPathIDS = (start, end) => {
     let maxDepth = 1;
@@ -54,8 +64,7 @@ const searchPathIDS = (start, end) => {
         }
         maxDepth++;
     }
-}
-
+};
 
 // Get next possible positions from the given position
 const getNextPos = pos => {
@@ -74,11 +83,10 @@ const getNextPos = pos => {
     );
 };
 
-
 // TEST:
-console.log(searchPathIDS([0,0], [0,0]));
-console.log(searchPathIDS([0,0], [1,2]));
-console.log(searchPathIDS([0,0], [3,3]));
-console.log(searchPathIDS([3,3], [0,0]));
-console.log(searchPathIDS([2,1], [0,0]));
-console.log(searchPathIDS([1,2], [0,0]));
+// console.log(searchPathIDS([0, 0], [0, 0]));
+// console.log(searchPathIDS([0, 0], [1, 2]));
+// console.log(searchPathIDS([0, 0], [3, 3]));
+console.log(searchPathIDS([3, 3], [0, 0]));
+// console.log(searchPathIDS([2, 1], [0, 0]));
+// console.log(searchPathIDS([1, 2], [0, 0]));
