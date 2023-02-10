@@ -7,6 +7,7 @@
  */
 
 const assert = require("assert");
+const { isArray } = require("util");
 
 // Pos is an array of two numbers [x, y]
 // where x and y are the coordinates of the chessboard
@@ -22,43 +23,54 @@ const knightMoves = (start, end) => {
 };
 
 // Return the path from start to end as an array of positions using DFS
-const searchPath = (start, end, visited = [], tovisit = [], maxDepth) => {
+const searchPath = (start, end, visited = [], maxDepth) => {
     if (equals(start, end)) {
         return visited;
     } else if (maxDepth === 0) {
         return undefined;
+    // } else if (tovisit.length === 0) {
+    //     return undefined;
     } else {
+        // let depth = maxDepth;
         const moves = getNextPos(start).filter(pos => {
             return visited.every(visitedPos => {
                 return equals(pos, visitedPos) === false;
             });
         });
-        // look if any of the moves is the end
-        const endMove = moves.find(move => equals(move, end));
-        if (endMove !== undefined) {
-            return visited;
-        }
-        tovisit.unshift(-1, ...moves); // -1 is a separator
+
         visited.push(start);
-        if (tovisit[0] === -1) {
-            tovisit.shift();
-            return searchPath(
-                tovisit.shift(),
-                end,
-                visited,
-                tovisit,
-                maxDepth - 1
-            );
-        } else {
-            return searchPath(tovisit.shift(), end, tovisit, visited, maxDepth);
-        }
+        const res = moves.map(pos => {
+            const path = searchPath(pos, end, visited, maxDepth - 1);
+            if (path !== undefined) {
+                return path;
+            }
+        });
+        assert(Array.isArray(res));
+
+        return res.reduce((acc, val) => {
+            if (val === undefined) {
+                return acc;
+            } else if (acc === undefined) {
+                return val;
+            } else return acc.length > val.length ? val : acc;
+        });
     }
+};
+
+const searchPathHelper = (start, end, visited, tovisit, maxDepth) => {
+    // tovisit.unshift(-1, ...moves); // -1 is a separator
+    // visited.push(start);
+    // if (tovisit[0] === -1) {
+    //     tovisit.shift();
+    //     depth--;
+    // }
+    // return searchPath(tovisit.shift(), end, tovisit, visited, depth);
 };
 
 const searchPathIDS = (start, end) => {
     let maxDepth = 1;
     while (true) {
-        const path = searchPath(start, end, [], [], maxDepth);
+        const path = searchPath(start, end, [], maxDepth);
         if (path !== undefined) {
             return [start, ...path, end];
         }
